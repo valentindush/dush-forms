@@ -8,13 +8,37 @@ export default function Create() {
   const [showForm, setShowForm] = useState(false)
   let questions = []
 
-  const addQuestion = ()=>{
 
-  }
+  // const question = {
+  //   qname,
+  //   qtype,
+  //   options:{
+  //     type,
 
-  const handleQtypeChange = (e)=>{
-    setQuestionType(e.target.value)
-  }
+  //   }
+  // }
+
+  // function Question(question){
+
+  //   this.question = question
+  //   this.save = ()=>{
+
+  //   }
+    
+  // }
+  
+
+  // const addQuestion = ()=>{
+
+  // }
+
+  // const handleQtypeChange = (e)=>{
+  //   setQuestionType(e.target.value)
+  // }
+
+  // const addCheckBoxOption = (value)=>{
+
+  // }
 
   return (
     <section className="bg-gray-200 h-screen">
@@ -41,7 +65,7 @@ export default function Create() {
         {
           showForm === true &&
 
-          <div className='absolute w-screen h-screen bg-black bg-opacity-20 top-0 flex flex-col items-center justify-center text-xs'>
+          <div className='absolute w-screen h-screen bg-black bg-opacity-50 top-0 flex flex-col items-center justify-center text-xs'>
           
           <div className="form bg-white p-4 rounded-lg w-[500px]">
             <div className="title text-center">New question</div>
@@ -62,14 +86,23 @@ export default function Create() {
               
               <div className="">
                 <Select
-                  value={'text'}
+                  value={questionType}
                   onChange={handleQtypeChange}
                 >
                   <MenuItem value={'text'}>Text</MenuItem>
                   <MenuItem value={'checkbox'}>Check boxes</MenuItem>
-                  <MenuItem value={'dropdown'}>Select List</MenuItem>
                   <MenuItem value={'radio'}>Multiple Choice</MenuItem>
                 </Select>
+              </div>
+            </div>
+
+            <div className="checkboxes px-2 pt-3 relative">
+              <div className="flex items-center justify-between z-0 bg-white">
+                <h2 className='text-sm'>Options : </h2>  
+                <button className="bg-blue-400 text-white p-1 px-3 rounded-md text-xs">New option</button>
+              </div>
+              <div className="options">
+
               </div>
             </div>
 
