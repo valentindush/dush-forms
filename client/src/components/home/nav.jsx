@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function NavBar() {
   return (
-    <div className='p-4 w-full bg-blue-500 flex items-center justify-between'>
+    <div className='p-4 w-full bg-blue-500 flex items-center justify-between sticky top-0 bg-opacity-70 backdrop-blur-md'>
         <div className="brand">
             <p className='font-bold text-lg text-white'>dushForms</p>
         </div>
