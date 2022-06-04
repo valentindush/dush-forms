@@ -6,39 +6,11 @@ export default function Create() {
   const [showTxt, setShowTxt] = useState(false)
   const [questionType,setQuestionType] = useState('text')
   const [showForm, setShowForm] = useState(false)
-  let questions = []
 
+  const handleQtypeChange = (e)=>{
+    setQuestionType(e.target.value)
+  }
 
-  // const question = {
-  //   qname,
-  //   qtype,
-  //   options:{
-  //     type,
-
-  //   }
-  // }
-
-  // function Question(question){
-
-  //   this.question = question
-  //   this.save = ()=>{
-
-  //   }
-    
-  // }
-  
-
-  // const addQuestion = ()=>{
-
-  // }
-
-  // const handleQtypeChange = (e)=>{
-  //   setQuestionType(e.target.value)
-  // }
-
-  // const addCheckBoxOption = (value)=>{
-
-  // }
 
   return (
     <section className="bg-gray-200 h-screen">
@@ -75,6 +47,7 @@ export default function Create() {
               
               <div className="">
                 <TextField
+                size='small'
                   variant='filled'
                   label="Question name"
                  />
@@ -88,8 +61,9 @@ export default function Create() {
                 <Select
                   value={questionType}
                   onChange={handleQtypeChange}
+                  size='small'
                 >
-                  <MenuItem value={'text'}>Text</MenuItem>
+                  <MenuItem  value={'text'}>Text</MenuItem>
                   <MenuItem value={'checkbox'}>Check boxes</MenuItem>
                   <MenuItem value={'radio'}>Multiple Choice</MenuItem>
                 </Select>
