@@ -1,14 +1,49 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar_CREATE from '../components/create/navbar'
 import {MenuItem, Select, Switch, TextField} from '@mui/material'
+import Question from './question'
 
 export default function Create() {
   const [showTxt, setShowTxt] = useState(false)
   const [questionType,setQuestionType] = useState('text')
   const [showForm, setShowForm] = useState(false)
+  const [qestionName, setQestionName] = useState("")
+  const [showAddOption,setShowAddOption] = useState(false)
+  const [optionName,setOptionName] = useState("")
+  const [optEl, setOptEl] = useState(<></>)
+  const [isRequired,setIsRequired] = useState(true)
+
+  const [questions, setQuestions] = useState([])
+  const [options,setOptions] = useState([])
+
+
 
   const handleQtypeChange = (e)=>{
     setQuestionType(e.target.value)
+  }
+
+  const addQuestion = ()=>{
+    let newQestion = {
+      type: questionType,
+      name: qestionName,
+      required: isRequired,
+      options: [...options]
+    }
+    setQuestions([...questions,newQestion])
+    setOptions([])
+    setShowForm(false)
+
+    console.log(questions)
+  }
+
+  const addOption = (option)=>{
+    if(questionType !== 'text'){
+        setOptions([...options,option])
+        let el = <p className='font-medium text-sm'>{option}</p>
+        setOptEl(<>{optEl} {el}</>)
+        setOptionName("")
+        setShowAddOption(false)
+    }
   }
 
 
@@ -26,6 +61,10 @@ export default function Create() {
                 <textarea type="text" className='block w-full outline-none p-2 border-b-[1px] border-black border-opacity-20 focus:border-blue-600 resize-none text-sm'>give the information requires so than I cann put them into the website</textarea>
               </div>
             </div>
+            {questions.length !==0 && <>
+              <Question question={questions[0]} />
+            </>}
+            
         </div>
 
         <div onClick={()=>setShowForm(true)} className="add bg-white shadow-md rounded-full p-4 cursor-pointer absolute right-[28%] top-[30%] hover:bg-gray-200 transition duration-300 ease-in">
@@ -47,6 +86,8 @@ export default function Create() {
               
               <div className="">
                 <TextField
+                value={qestionName}
+                onChange={(e)=>setQestionName(e.target.value)}
                 size='small'
                   variant='filled'
                   label="Question name"
@@ -70,28 +111,37 @@ export default function Create() {
               </div>
             </div>
 
-            <div className="checkboxes px-2 pt-3 relative">
+            {questionType !== 'text' && <div className="px-2 pt-3 relative">
               <div className="flex items-center justify-between z-0 bg-white">
                 <h2 className='text-sm'>Options : </h2>  
-                <button className="bg-blue-400 text-white p-1 px-3 rounded-md text-xs">New option</button>
+                <button onClick={()=>setShowAddOption(true)} className="bg-blue-400 text-white p-1 px-3 rounded-md text-sm" >New option</button>
               </div>
-              <div className="options">
 
+              {showAddOption && <div className="add_option absolute z-10 bg-blue-100 p-4 rounded-md left-20 top-0">
+                <TextField value={optionName} onChange={(e)=>setOptionName(e.target.value)} size='small' label='Option name' variant='filled'/>
+                <div className="flex gap-4 pt-4">
+                  <button className='bg-blue-400 text-white p-2 text-sm px-4 rounded-md' onClick={()=>addOption(optionName)}>Add</button>
+                  <button className='bg-red-400 text-white p-2 text-sm px-4 rounded-md' onClick={()=>setShowAddOption(false)}>Cancel</button>
+                </div>
+              </div>}
+
+              <div className="options py-2 px-4">
+                {optEl}
               </div>
-            </div>
+            </div>}
 
             <div className="border-b-[1px] border-black border-opacity-20 p-2 flex items-center justify-between">
               <h2>Required ?</h2>
               
               <div className="">
-                <Switch defaultChecked color='primary' />
+                <Switch value={isRequired} onChange={(e)=>setIsRequired(e.target.value)} defaultChecked color='primary' />
               </div>
             </div>
 
             <div className="buttons flex justify-between pt-5">
 
               <button onClick={()=> setShowForm(false)} className="bg-red-400 text-white p-2 px-5 rounded-md text-xs">Cancel</button>
-              <button className="bg-blue-400 text-white p-2 px-5 rounded-md text-xs">Add question</button>
+              <button onClick={addQuestion} className="bg-blue-400 text-white p-2 px-5 rounded-md text-xs">Add question</button>
 
             </div>
 
