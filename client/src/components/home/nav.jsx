@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function NavBar() {
+export default function NavBar(props) {
   return (
     <div className='p-4 w-full bg-blue-500 flex items-center justify-between sticky top-0 bg-opacity-70 backdrop-blur-md'>
         <div className="brand">
@@ -10,7 +10,7 @@ export default function NavBar() {
         <div className="right flex items-center cursor-pointer relative">
             <div className="profile flex items-center gap-2">
                 <img className='object-cover w-8 h-8 rounded-full block' src="https://st2.depositphotos.com/1104517/11965/v/950/depositphotos_119659092-stock-illustration-male-avatar-profile-picture-vector.jpg" alt="" />
-                <p className='text-sm text-white'>dush valentin</p>
+                <p className='text-sm text-white'>{props.user}</p>
             </div>
 
             <div className="icon px-3">

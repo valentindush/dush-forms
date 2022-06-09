@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import Navbar_CREATE from '../components/create/navbar'
 import {MenuItem, Select, Switch, TextField} from '@mui/material'
 import Question from './question'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Create() {
   const [showTxt, setShowTxt] = useState(false)
@@ -16,6 +18,48 @@ export default function Create() {
   const [questions, setQuestions] = useState([])
   const [options,setOptions] = useState([])
 
+  const [formTitle, setFormTitle] = useState("")
+  const [formSubTitle, setFormSubTitle] = useState("")
+
+  useEffect(()=>{
+    const token = JSON.parse(localStorage.getItem('forms_token'));
+    if (!token) {
+      navigate('/login')
+    }else{
+      
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      var raw = JSON.stringify({
+      "token": token,
+      });
+
+      var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+      };
+
+      fetch("http://localhost:4000/api/auth/loginhome", requestOptions)
+      .then(response => response.json())
+      .then((result=>{
+
+          if(!result.status){ 
+              navigate('/login')
+          }else{
+            const decoded = jwt_decode(token)
+            setCurrentUser(decoded)
+            console.log(decoded)
+            
+          }
+      }))
+      .catch((error)=>{
+          navigate('/login')
+      });
+    }
+  },[])
+
 
 
   const handleQtypeChange = (e)=>{
@@ -23,17 +67,19 @@ export default function Create() {
   }
 
   const addQuestion = ()=>{
-    let newQestion = {
-      type: questionType,
-      name: qestionName,
-      required: isRequired,
-      options: [...options]
+    if(questionType && qestionName !== ""){
+      let newQestion = {
+        type: questionType,
+        name: qestionName,
+        required: isRequired,
+        options: [...options]
+      }
+      setQuestions([...questions,newQestion])
+      setOptions([])
+      setQestionName("")
+      setOptEl(<></>)
+      setShowForm(false)
     }
-    setQuestions([...questions,newQestion])
-    setOptions([])
-    setShowForm(false)
-
-    console.log(questions)
   }
 
   const addOption = (option)=>{
@@ -46,30 +92,95 @@ export default function Create() {
     }
   }
 
+  const addForm = ()=>{
+    if(questions.length > 0){
+      const toastOptions = {
+        position: "top-right",
+        autoClose: 7000,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      }
+
+      const form = {
+        title: formTitle,
+        subtitle: formSubTitle,
+        questions: [...questions]
+      }
+
+      console.log(form)
+
+      //Sending request to server
+
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      const token = JSON.parse(localStorage.getItem('forms_token'));
+
+      var raw = JSON.stringify({
+      "token": token,
+      "form": form
+      });
+  
+      var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+      };
+  
+      fetch("http://localhost:4000/api/form/create", requestOptions)
+      .then(response => response.json())
+      .then((result=>{
+          setLoading(false)
+          if(result.status){ 
+              localStorage.setItem('forms_token', JSON.stringify(result.token))
+              navigate('/')
+          }else{
+              toast.error(result.msg, toastOptions)
+          }
+      }))
+      .catch((error)=>{
+          setLoading(false)
+          toast.error("Something went wrong", toastOptions)
+      });
+    }
+    
+
+  }
+
 
   return (
-    <section className="bg-gray-200 h-screen">
+    <section className="bg-gray-200 h-screen overflow-auto">
       <Navbar_CREATE />
 
       <section className='main flex items-center justify-center'>
-        <div className="form  w-[500px]  mt-5  h-fit flex flex-col gap-4">
+        <div className="form  w-[500px]  mt-5  h-fit flex flex-col gap-4 pb-5">
             <div className="header p-4 bg-white rounded-lg">
               <div className="title">
-                <input type="text" value={'G.O.D website requirements'} className='block w-full outline-none p-2 border-b-[1px] border-black border-opacity-20 focus:border-blue-600 text-lg font-medium' />
+                <input type="text" placeholder='Form title' value={formTitle} onChange={(e)=>setFormTitle(e.target.value)} className='block w-full outline-none p-2 border-b-[1px] border-black border-opacity-20 focus:border-blue-600 text-lg font-medium' />
               </div>
               <div className="desc">
-                <textarea type="text" className='block w-full outline-none p-2 border-b-[1px] border-black border-opacity-20 focus:border-blue-600 resize-none text-sm'>give the information requires so than I cann put them into the website</textarea>
+                <textarea type="text" placeholder='Form description' className='block w-full outline-none p-2 border-b-[1px] border-black border-opacity-20 focus:border-blue-600 resize-none text-sm' onChange={(e)=>setFormSubTitle(e.target.value)} >{formSubTitle}</textarea>
               </div>
             </div>
             {questions.length !==0 && <>
-              <Question question={questions[0]} />
+              {questions.map((q)=>{
+                return <Question key={q.id} question={q} />
+              })}
             </>}
+
+            {questions.length !== 0 && <div className="w-fulf flex justify-between">
+              <button onClick={addForm} className='bg-blue-400 text-white px-4 py-2 rounded-lg cursor-pointer'>Finish</button>
+              <button onClick={()=>setQuestions([])} className='bg-red-400 text-white px-4 py-2 rounded-lg cursor-pointer'>Cancel</button>
+            </div>}
             
         </div>
 
         <div onClick={()=>setShowForm(true)} className="add bg-white shadow-md rounded-full p-4 cursor-pointer absolute right-[28%] top-[30%] hover:bg-gray-200 transition duration-300 ease-in">
           <svg className='w-6 h-6 fill-blue-400' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z"/></svg> 
         </div>
+
+        <ToastContainer />
 
       </section>
 

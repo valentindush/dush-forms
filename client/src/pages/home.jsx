@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import NavBar from '../components/home/nav'
 import TempCard from '../components/home/tempelateCard'
 
@@ -7,17 +7,62 @@ import feedImg from '../assets/feedback.webp'
 import jobImg from '../assets/job.png'
 import orderImg from '../assets/order.jpg'
 import RecentCard from '../components/home/recentFormCard'
+import { useNavigate } from 'react-router-dom'
+import jwt_decode from 'jwt-decode'
 
 export default function Home() {
+  const navigate = useNavigate()
+  const [currentUser,setCurrentUser] = useState({})
+
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem('forms_token'));
+    if (!token) {
+      navigate('/login')
+    }else{
+      
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      var raw = JSON.stringify({
+      "token": token,
+      });
+
+      var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+      };
+
+      fetch("http://localhost:4000/api/auth/loginhome", requestOptions)
+      .then(response => response.json())
+      .then((result=>{
+
+          if(!result.status){ 
+              navigate('/login')
+          }else{
+            const decoded = jwt_decode(token)
+            setCurrentUser(decoded)
+            console.log(decoded)
+            
+          }
+      }))
+      .catch((error)=>{
+          navigate('/login')
+      });
+    }
+
+  },[])
+
   return (
     <section className='w-screen h-screen'>
-      <NavBar />
+      <NavBar user={currentUser?currentUser.username:"dush valentin"}  />
 
-      <div className="hero bg-blue-300 p-12 px-24">
-        <div className="title pb-5 pl-[10rem]">
+      <div className="hero bg-blue-300 p-12">
+        <div className="title pb-5">
           <p className='text-white font-medium'>Create a new form</p>
         </div>
-        <div className="cards flex justify-center gap-3 flex-wrap">
+        <div className="cards flex gap-3 flex-wrap">
 
           <a href="/create?temp=1" className='block'>
 
@@ -39,7 +84,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="px-[15rem] py-4">
+      <div className=" px-12 py-4">
         <div className="title">
           <p>Your recent forms</p>
         </div>

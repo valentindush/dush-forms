@@ -2,7 +2,6 @@ import React from 'react'
 
 export default function Question(props) {
   const question = props.question
-  console.log(question)
   return (
     <div className='p-4 bg-white rounded-lg'>
       <div className="name">
@@ -11,14 +10,15 @@ export default function Question(props) {
       <div className="">
         <p className='text-sm'>Anwer type: {question.type}</p>
       </div>
-      {question.options.lenght !== 0 && 
+      {question.options.length > 0 && 
       <div className="options pt-3">
         <h2 className='font-medium pb-2'>Options :</h2>
         <div className="px-2">
-          <p className='text-sm font-normal'>Option 1</p>
-          <p className='text-sm font-normal'>Option 2</p>
-          <p className='text-sm font-normal'>Option 3</p>
-          <p className='text-sm font-normal'>Option 4</p>
+          {question.options.map((option)=>{
+            return <p className='text-sm font-normal'>{option}</p>
+          })}
+          
+
         </div>
       </div>}
     </div>
