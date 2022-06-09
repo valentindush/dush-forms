@@ -9,10 +9,14 @@ import orderImg from '../assets/order.jpg'
 import RecentCard from '../components/home/recentFormCard'
 import { useNavigate } from 'react-router-dom'
 import jwt_decode from 'jwt-decode'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
   const navigate = useNavigate()
   const [currentUser,setCurrentUser] = useState({})
+
+  const [loading,setLoading] = useState(false)
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem('forms_token'));
@@ -54,6 +58,43 @@ export default function Home() {
 
   },[])
 
+  const getRecentForms = () => {
+    var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      const token = JSON.parse(localStorage.getItem('forms_token'));
+
+      var raw = JSON.stringify({
+      "token": token,
+      });
+  
+      var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+      };
+  
+      fetch("http://localhost:4000/api/form/create", requestOptions)
+      .then(response => response.json())
+      .then((result=>{
+          setLoading(false)
+          if(result.status){
+            toast.success("Success !", toastOptions)
+            setFormUrl(result.url)
+            setTimeout(()=>{
+              setShowShareDiv(true)
+            },1000)
+          }else{
+            toast.error("Something went wrong", toastOptions)
+          }
+      }))
+      .catch((error)=>{
+          setLoading(false)
+          toast.error("Something went wrong", toastOptions)
+      });
+  }
+
+
   return (
     <section className='w-screen h-screen'>
       <NavBar user={currentUser?currentUser.username:"dush valentin"}  />
@@ -90,6 +131,7 @@ export default function Home() {
         </div>
 
         <div className="flex flex-wrap gap-3 pt-5">
+          
           <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
           <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
           <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
@@ -101,7 +143,9 @@ export default function Home() {
 
 
         </div>
+        <ToastContainer />
       </div>
+
     </section>
   )
 }

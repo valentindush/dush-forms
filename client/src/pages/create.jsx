@@ -4,6 +4,8 @@ import {MenuItem, Select, Switch, TextField} from '@mui/material'
 import Question from './question'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import {useNavigate} from 'react-router-dom'
+
 
 export default function Create() {
   const [showTxt, setShowTxt] = useState(false)
@@ -22,43 +24,15 @@ export default function Create() {
   const [formSubTitle, setFormSubTitle] = useState("")
   const [loading, setLoading] = useState(false)
   const [showShareDiv, setShowShareDiv] = useState(false)
+  const [formUrl,setFormUrl] = useState("")
+
+  const navigate = useNavigate()
+
 
   useEffect(()=>{
     const token = JSON.parse(localStorage.getItem('forms_token'));
     if (!token) {
       navigate('/login')
-    }else{
-      
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-
-      var raw = JSON.stringify({
-      "token": token,
-      });
-
-      var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
-      };
-
-      fetch("http://localhost:4000/api/auth/loginhome", requestOptions)
-      .then(response => response.json())
-      .then((result=>{
-
-          if(!result.status){ 
-              navigate('/login')
-          }else{
-            const decoded = jwt_decode(token)
-            setCurrentUser(decoded)
-            console.log(decoded)
-            
-          }
-      }))
-      .catch((error)=>{
-          navigate('/login')
-      });
     }
   },[])
 
@@ -137,10 +111,10 @@ export default function Create() {
           setLoading(false)
           if(result.status){
             toast.success("Success !", toastOptions)
-
+            setFormUrl(result.url)
             setTimeout(()=>{
-
-            })
+              setShowShareDiv(true)
+            },1000)
           }else{
             toast.error("Something went wrong", toastOptions)
           }
@@ -152,6 +126,20 @@ export default function Create() {
     }
     
 
+  }
+
+  const finish = ()=>{
+    setShowShareDiv(false)
+    navigate('/')
+  }
+
+  const copyUrl = async(text)=>{
+
+    if('clipboard' in navigator){
+      return await navigator.clipboard.writeText(text)
+    }else{
+      return document.execCommand('copy', true, text)
+    }
   }
 
 
@@ -199,20 +187,23 @@ export default function Create() {
       </section>
 
 
-      <div className='w-[400px] h-[200px] bg-white border-2 m-auto p-3 rounded-lg relative'>
+      {showShareDiv&&<div className='w-[400px] h-[200px] bg-white border-2 m-auto p-3 rounded-lg absolute top-1/2 left-[37%]'>
           <div className="">
             <h2 className='text-center'>Share "{formTitle}"</h2>
-            <p className='text-xs text-center text-gray-600'>Anynonw with the link can view the form</p>
+            <p className='text-xs text-center text-gray-600'>Anynone with the link can view the form</p>
           </div>
 
-          <svg className='w-4 h-4 fill-blue-300 absolute right-4 top-[42%]' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <svg className='w-4 h-4 fill-blue-300 absolute right-4 top-[42%] cursor-pointer' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
             <path d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z"/>
           </svg>
 
           <div className="link flex items-center justify-center mt-4 p-2 bg-gray-200 hover:bg-gray-300 rounded-lg ">
-            <p className="text-xs text-blue-400 text-center cursor-pointer">https://dushforms/form/ujgshbgkbsbfhgbfsbgfbkba?k=sharing</p>
+            <p onClick={(e)=>copyUrl(e.target.innerText)} className="text-xs text-blue-400 text-center cursor-pointer">http://localhost:3000/form/{formUrl?formUrl: ""}</p>
           </div>
-      </div>
+          <div className="">
+            <button onClick={finish} className='text-sm bg-blue-400 p-2 text-white w-full rounded-lg mt-4 cursor-pointer hover:bg-blue-500 transition duration-300 ease-in'>Done</button>
+          </div>
+      </div>}
 
         {
           showForm === true &&
@@ -281,7 +272,7 @@ export default function Create() {
 
             <div className="buttons flex justify-between pt-5">
 
-              <button onClick={()=> setShowForm(false)} className="bg-red-400 text-white p-2 px-5 rounded-md text-xs">Cancel</button>
+              <button onClick={finish} className="bg-red-400 text-white p-2 px-5 rounded-md text-xs">Cancel</button>
               <button onClick={addQuestion} className="bg-blue-400 text-white p-2 px-5 rounded-md text-xs">Add question</button>
 
             </div>
