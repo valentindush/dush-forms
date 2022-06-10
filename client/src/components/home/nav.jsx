@@ -1,9 +1,16 @@
 import React from 'react'
 import logo from '../../logo1.png'
+import { useNavigate } from 'react-router-dom'
 
 export default function NavBar(props) {
+    const navigate = useNavigate()
 
     const [showLogout,setShowLogout] = React.useState(false)
+
+    const logout = () => {
+        localStorage.removeItem('forms_token')
+        navigate('/login')
+    }
 
 
   return (
@@ -26,7 +33,7 @@ export default function NavBar(props) {
             </div>
 
             {showLogout&&<div className="absolute bg-white top-9 right-5">
-                <button className='p-1 px-3 text-sm text-red-400 hover:text-white hover:bg-red-400'>logout</button>
+                <button onClick={logout} className='p-1 px-3 text-sm text-red-400 hover:text-white hover:bg-red-400'>logout</button>
             </div>}
         </div>
     </div>

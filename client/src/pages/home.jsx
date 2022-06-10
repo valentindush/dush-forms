@@ -95,6 +95,9 @@ export default function Home() {
   }
 
 
+
+
+
   return (
     <section className='w-screen h-screen'>
       <NavBar user={currentUser?currentUser.username:"dush valentin"}  />

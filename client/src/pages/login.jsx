@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +11,16 @@ export default function Login() {
     const [password,setPassword] = useState("")
     const [loading,setLoading] = useState(false)
     const navigate = useNavigate()
+
+
+
+    useEffect(()=>{
+        const token = JSON.parse(localStorage.getItem("forms_token"))
+        if(token){
+            navigate("/")
+        }
+    },[])
+
     const toastOptions = {
         position: "top-right",
         autoClose: 7000,
