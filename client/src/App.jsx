@@ -7,6 +7,7 @@ import Login from './pages/login'
 import SignUp from './pages/signup'
 import Home from './pages/home'
 import Create from './pages/create'
+import ViewForm from './pages/ViewForm'
 
 function App() {
   
@@ -19,6 +20,7 @@ function App() {
         <Route path='/signup' element={<SignUp/>}/>
         <Route path='/' element={<Home/>}/>
         <Route path='/create' element={<Create/>}/>
+        <Route path='/form/:url' element={<ViewForm/>}/>
       </Routes>
     </Router>
   )
