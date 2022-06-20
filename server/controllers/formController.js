@@ -69,20 +69,20 @@ module.exports.getForm = async (req,res,next)=>{
             return res.status(401)
         }
 
-        const form = await FormSchema.findOne({url:url})
+        const form = await FormSchema.find({url:url})
 
         if(!form){
             return res.status(404)
         }
 
-        return res.json({status:true,form:form.form})
+        return res.json({status:true,form:form})
         
     } catch (e) {
         next(e)
     }
 }
 
-model.exports.submitForm = async (req,res,next)=>{
+module.exports.submitForm = async (req,res,next)=>{
     try {
         
         const token = req.body.token;
@@ -124,6 +124,31 @@ model.exports.submitForm = async (req,res,next)=>{
 
 
     } catch (e) {
+        next(e)
+    }
+}
+
+module.exports.getRecentForms = async (req,res,next)=>{
+    try {
+        const token = req.body.token;
+        const decoded = jwt.verify(token, process.env.JWT_KEY);
+        if(!token) return res.status(402)
+        if(!decoded){
+            return res.status(401)
+        }
+
+        const user = await UsersSchema.findOne({email: decoded.email})
+
+        if(!user){
+            return res.status(401)
+        }
+
+        //Get all forms
+
+        const forms = await FormSchema.find({owner: user._id})
+        return res.json({status:true, forms:forms})
+
+    }catch(e){
         next(e)
     }
 }

@@ -13,7 +13,7 @@ export default function SignUp() {
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem('form_token'));
         if (token) {
-            navigate('/')
+            // navigate('/')
         }
     },[])
 

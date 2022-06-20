@@ -70,7 +70,7 @@ export default function Login() {
 
     }
   return (
-    <div className='container h-screen flex items-center justify-center bg-white' style={{backgroundImage: `url(${bg})`}}>
+    <div className='container h-screen flex items-center w-screen justify-center bg-white' style={{backgroundImage: `url(${bg})`}}>
         <div className="shadow-md flex border-[1px] border-gray-300 w-[600px] rounded-md bg-white">
             <div className="brand rounded-l-md  bg-blue-500 p-4">
                 <img src={logo} alt="logo" className="w-32 mx-auto"/>

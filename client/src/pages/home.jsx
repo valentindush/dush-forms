@@ -15,12 +15,44 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function Home() {
   const navigate = useNavigate()
   const [currentUser,setCurrentUser] = useState({})
-
   const [loading,setLoading] = useState(false)
+  const [recentForms,setRecentForms] = useState(null)
+
+  const getRecentForms = () => {
+    var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      const token = JSON.parse(localStorage.getItem('forms_token'));
+
+      var raw = JSON.stringify({
+      "token": token,
+      });
+  
+      var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+      };
+  
+      fetch("http://localhost:4000/api/form/getrecentforms", requestOptions)
+      .then(response => response.json())
+      .then((result=>{
+          setLoading(false)
+          if(result.status){
+            setRecentForms(result.forms)
+          }else{
+            
+          }
+      }))
+      .catch((error)=>{
+          setLoading(false)
+      });
+  }
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem('forms_token'));
     if (!token) {
+      localStorage.removeItem('forms_token')
       navigate('/login')
     }else{
       
@@ -43,59 +75,25 @@ export default function Home() {
       .then((result=>{
 
           if(!result.status){ 
+            localStorage.removeItem('forms_token')
               navigate('/login')
           }else{
             const decoded = jwt_decode(token)
             setCurrentUser(decoded)
-            console.log(decoded)
             
           }
       }))
       .catch((error)=>{
+          localStorage.removeItem('forms_token')
           navigate('/login')
       });
     }
-
+    getRecentForms()
   },[])
 
-  const getRecentForms = () => {
-    var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-      const token = JSON.parse(localStorage.getItem('forms_token'));
 
-      var raw = JSON.stringify({
-      "token": token,
-      });
+
   
-      var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
-      };
-  
-      fetch("http://localhost:4000/api/form/create", requestOptions)
-      .then(response => response.json())
-      .then((result=>{
-          setLoading(false)
-          if(result.status){
-            toast.success("Success !", toastOptions)
-            setFormUrl(result.url)
-            setTimeout(()=>{
-              setShowShareDiv(true)
-            },1000)
-          }else{
-            toast.error("Something went wrong", toastOptions)
-          }
-      }))
-      .catch((error)=>{
-          setLoading(false)
-          toast.error("Something went wrong", toastOptions)
-      });
-  }
-
-
-
 
 
   return (
@@ -134,16 +132,12 @@ export default function Home() {
         </div>
 
         <div className="flex flex-wrap gap-3 pt-5">
-          
-          <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
-          <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
-          <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
-          <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
-          <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
-          <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
-          <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
-          <RecentCard img={eventIMG} name="Our app survey" id="kl13twFA23eik13lHGO" />
 
+          {recentForms&&recentForms.map((form,index)=>{
+            return <RecentCard key={index} img={eventIMG} name={form.form.title} id={form.url}/>
+          })}
+
+          {!recentForms && <p className='text-gray-600 text-sm'>Your recent forms will appear here.</p>}
 
         </div>
         <ToastContainer />
