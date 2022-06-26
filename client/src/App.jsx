@@ -17,7 +17,7 @@ function App() {
     <Router>
       <Routes>
         <Route path='/login' element={<Login/>} />
-        <Route path='/signup' element={<SignUp/>}/>
+        <Route exact path='/signup' element={<SignUp/>}/>
         <Route path='/' element={<Home/>}/>
         <Route path='/create' element={<Create/>}/>
         <Route path='/form/:url' element={<ViewForm/>}/>
