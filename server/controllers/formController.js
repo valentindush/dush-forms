@@ -3,7 +3,7 @@ const { FormSchema } = require('../models/formsModel');
 const { v4: uuidv4 } = require('uuid');
 const { UsersSchema } = require('../models/userModel');
 const { model } = require('mongoose');
-const { ResultsSchema } = require('./resultsModel');
+const {ResultsSchema} = require('../models/resultsModel') 
 
 module.exports.CreateForm = async (req,res,next) => {
     try{
@@ -113,13 +113,11 @@ module.exports.submitForm = async (req,res,next)=>{
             results: results
         })
 
-        if(await newResult.save()){
-            return res.json({status:true, msg: "Saved"})
-        }else{
-
+        try {
+            await newResult.save()
+        } catch (err) {
             return res.status(500)
         }
-
 
 
 
@@ -145,7 +143,7 @@ module.exports.getRecentForms = async (req,res,next)=>{
 
         //Get all forms
 
-        const forms = await FormSchema.find({owner: user._id})
+        const forms = await FormSchema.find({owner: user._id}).limit(15)
         return res.json({status:true, forms:forms})
 
     }catch(e){

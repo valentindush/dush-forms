@@ -51,10 +51,30 @@ export default function ViewForm() {
   },[])
 
 
+  const handler = (index,answer)=>{
+    if(form.questions[index].type === 'checkbox'){
+      const newQuestions = [...questions]
+      newQuestions[index].answer = []
+      newQuestions[index].answer.push(answer)
+      setQuestions(newQuestions)
+      console.log(questions)
+    }
+    const newQuestions = [...questions]
+    newQuestions[index].answer = answer
+    setQuestions(newQuestions)
+  }
+
+  const removeOption = (index,option)=>{
+    if(form.questions[index].type !== 'checkbox') return
+    const newQuestions = [...questions]
+    newQuestions[index].answer = newQuestions[index].answer.filter(item=>item!==option)
+    setQuestions(newQuestions)
+    console.log(questions[index].answer)
+  }
 
   return (
     <section className='bg-gray-200 min-h-screen'>
-        <div className='p-4 w-full bg-blue-500 flex items-center justify-between sticky top-0 bg-opacity-70 backdrop-blur-md'>
+        <div className='p-4 w-full bg-blue-500 flex items-center justify-between sticky z-10 top-0 bg-opacity-70 backdrop-blur-md'>
           <div className="brand flex items-center gap-4">
               <a href="/">
                   <img src={logo} className='w-12 h-12' />
@@ -68,21 +88,20 @@ export default function ViewForm() {
                   <img className='object-cover w-8 h-8 rounded-full block' src="https://st2.depositphotos.com/1104517/11965/v/950/depositphotos_119659092-stock-illustration-male-avatar-profile-picture-vector.jpg" alt="" />
                   <p className='text-sm text-white'>dush valentin</p>
               </div>
-
           </div>
         </div>
 
-        <div className={`form sm:w-[90%] md:w-[600px] lg:w-[600px] m-auto mt-5  h-fit flex flex-col gap-4 pb-5 }`}>
+        <div className={`form sm:w-[90%] md:w-[600px] lg:w-[600px] m-auto mt-5  h-fit flex flex-col gap-2 pb-5 }`}>
             <div className="header p-4 bg-white rounded-lg">
               <div className="title">
-                <h2 className='text-xl text-gray-700 py-4 font-semibold'>{"Title"}</h2>
+                <h2 className='text-xl text-gray-700 py-4 font-semibold'>{title}</h2>
               </div>
               <div className="desc">
-                <h3 className='txt-sm text-gray-500'>{"SUBtitle"}</h3>
+                <h3 className='txt-sm text-gray-500'>{form.subtitle}</h3>
               </div>
             </div>  
-            {questions.map((question)=>{
-                return <Question question={question} />
+            {questions.map((question,index)=>{
+                return <Question key={index} remove={removeOption} id={index} handler={handler} question={question} />
             })}
 
             <div className="flex justify-between px-1">

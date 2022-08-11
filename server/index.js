@@ -10,12 +10,8 @@ app.use(cors())
 
 
 
-mongoose.connect('mongodb://localhost:27017/forms', ()=>console.log("db Connected"))
+mongoose.connect('mongodb://127.0.0.1:27017/forms', ()=>console.log("db Connected"))
 app.use('/api/auth', AuthRoute)
 app.use('/api/form', formRouter)
-
-
-
-
 app.listen(port, ()=> console.log("Server up"))
 

@@ -148,7 +148,7 @@ export default function Create() {
       <Navbar_CREATE />
 
       <section className='main flex items-center justify-center'>
-        <div className={`form  w-[500px]  mt-5  h-fit flex flex-col gap-4 pb-5 ${loading?"pointer-events-none": ""}`}>
+        <div className={`form  w-[500px]  mt-5  h-fit flex flex-col gap-2 pb-5 ${loading?"pointer-events-none": ""}`}>
             <div className="header p-4 bg-white rounded-lg">
               <div className="title">
                 <input type="text" placeholder='Form title' value={formTitle} onChange={(e)=>setFormTitle(e.target.value)} className='block w-full outline-none p-2 border-b-[1px] border-black border-opacity-20 focus:border-blue-600 text-lg font-medium' />
@@ -272,7 +272,7 @@ export default function Create() {
 
             <div className="buttons flex justify-between pt-5">
 
-              <button onClick={finish} className="bg-red-400 text-white p-2 px-5 rounded-md text-xs">Cancel</button>
+              <button onClick={()=>setShowForm(false)} className="bg-red-400 text-white p-2 px-5 rounded-md text-xs">Cancel</button>
               <button onClick={addQuestion} className="bg-blue-400 text-white p-2 px-5 rounded-md text-xs">Add question</button>
 
             </div>

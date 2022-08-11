@@ -87,7 +87,7 @@ export default function Login() {
                 <form action="#" className={`p-8 px-3 relative ${loading?"pointer-events-none opacity-80":""}`} onSubmit={(e)=>{handleLogin(e)}}>
 
                     <input value={email} onChange={(e)=>setEmail(e.target.value)} type="email" placeholder='Email' className='w-full block p-1 text-sm outline-none border-2 border-gray-300 mt-2 rounded-md focus:border-blue-400'/>
-                    <input value={password} onChange={(e)=>setPassword(e.target.value)} type="text" placeholder='Password' className='w-full block p-1 text-sm outline-none border-2 border-gray-300 mt-2 rounded-md focus:border-blue-400'/>
+                    <input value={password}  onChange={(e)=>setPassword(e.target.value)} type="password" placeholder='Password' className='w-full block p-1 text-sm outline-none border-2 border-gray-300 mt-2 rounded-md focus:border-blue-400'/>
 
                     <p className='text-sm text-red-400 text-center mt-3'></p>
 
