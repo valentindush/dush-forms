@@ -5,7 +5,7 @@ import bg from '../assets/bg.png'
 import { registerRoute } from '../utils/apiRoutes';
 import axios from 'axios'
 import logo from '../logo1.png'
-import {useNavigate} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 
 
 export default function SignUp() {
@@ -112,7 +112,7 @@ export default function SignUp() {
 
                     <button onClick={(e)=>handleSubmit(e)} type='submit' className='w-full mt-4 bg-blue-500 text-white p-1 rounded-md'>Create account</button>  
 
-                    <p className='text-sm text-center mt-2 text-gray-500'>Already have account? <a href="/login" className='text-blue-400'>Login</a></p>     
+                    <p className='text-sm text-center mt-2 text-gray-500'>Already have account? <Link to={"/login"} className='text-blue-400'>Login</Link></p>     
 
                     {loading && <svg role="status" class="w-8 h-8 mr-2 text-transparent animate-spin dark:fill-trasparent fill-blue-400 absolute right-[45%]" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
