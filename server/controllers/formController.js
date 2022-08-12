@@ -173,16 +173,16 @@ module.exports.Submitresults = async (req, res, next) => {
   try {
     const { token, url, results } = req.body;
     if (!token || !url || !results) {
-      return res.status(402);
+      return res.status(402).json({ status: false, msg: "Missing fields" });
     }
     const decoded = jwt.verify(token, process.env.JWT_KEY);
-    if (!decoded) return res.status(401);
+    if (!decoded) return res.status(401).json({ status: false, msg: "Invalid Token" });
 
     const user = await UsersSchema.findOne({ email: decoded.email });
-    if (!user) return res.status(401);
+    if (!user) return res.status(401).json({ status: false, msg: "User not found" });
 
     const form = await FormSchema.findOne({ url: url });
-    if (!form) return res.status(404);
+    if (!form) return res.status(404).json({ status: false, msg: "Form not found" });
 
     //Check if the user had already submitted the form
 
@@ -194,7 +194,7 @@ module.exports.Submitresults = async (req, res, next) => {
     if (result) {
       return res
         .status(403)
-        .json({ status: false, msg: "You have already submitted the form" });
+        .json({ status: false, msg: "You have already submitted this form before." });
     }
 
     //Save the result
@@ -207,8 +207,9 @@ module.exports.Submitresults = async (req, res, next) => {
 
     try {
       await newResult.save();
+      return res.json({ status: true, msg: "Submitted" });
     } catch (err) {
-      return res.status(500);
+      return res.status(500).json({ status: false, msg: "Error" });
     }
   } catch (err) {
     next(err);
