@@ -18,15 +18,13 @@ export default function Question(props) {
     }
     
     const [checkboxes,setCheckboxes] = useState([])
-
     const updateCheckBox = (e)=>{
-        // if(e.target.checked){
+        if(e.target.checked){
             setCheckboxes([...checkboxes,e.target.value])
-            console.log(checkboxes)
-        // }else{
-            setCheckboxes(checkboxes.filter(item=>item!==e.target.value)) 
-            console.log(checkboxes)        
-        // }
+        }else{
+            setCheckboxes(checkboxes.filter(item=>item!==e.target.value))         
+        }
+        props.handler(props.id,checkboxes)
     }
     const options = question.options.map((option)=>{
         const [checked,setChecked] = useState(false)

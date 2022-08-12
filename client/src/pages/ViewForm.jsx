@@ -3,6 +3,7 @@ import logo from '../logo1.png'
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import Question from '../components/view/question'
+import { toast } from 'react-toastify'
 
 export default function ViewForm() {
 
@@ -52,25 +53,70 @@ export default function ViewForm() {
 
 
   const handler = (index,answer)=>{
-    if(form.questions[index].type === 'checkbox'){
-      const newQuestions = [...questions]
-      newQuestions[index].answer = []
-      newQuestions[index].answer.push(answer)
-      setQuestions(newQuestions)
-      console.log(questions)
-    }
+    
     const newQuestions = [...questions]
     newQuestions[index].answer = answer
     setQuestions(newQuestions)
   }
 
-  const removeOption = (index,option)=>{
-    if(form.questions[index].type !== 'checkbox') return
-    const newQuestions = [...questions]
-    newQuestions[index].answer = newQuestions[index].answer.filter(item=>item!==option)
-    setQuestions(newQuestions)
-    console.log(questions[index].answer)
+  const submit = ()=>{
+    //Check if all questions are answered
+    const requiredQuestions = questions.filter(question=>question.required)
+    const textQuestions = requiredQuestions.filter(question=>question.type === 'text')
+    const checkboxQuestions = requiredQuestions.filter(question=>question.type === 'checkbox')
+    const radioQuestions = requiredQuestions.filter(question=>question.type === 'radio')
+
+    const unansweredQuestions = textQuestions.filter(question=>question.answer === '')
+    const unansweredCheckboxQuestions = checkboxQuestions.filter(question=>question.answer.length === 0)
+    const unansweredRadioQuestions = radioQuestions.filter(question=>question.answer === '')
+
+    if(unansweredQuestions.length > 0 || unansweredCheckboxQuestions.length > 0 || unansweredRadioQuestions.length > 0){
+      const toastOptions = {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      }
+      toast.error('Please answer all required questions', toastOptions)
+    }
+    //Submit form
+
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    const token = JSON.parse(localStorage.getItem('forms_token'))
+
+    const resultsWithForm = {
+      title: title,
+      subtitle: form.subtitle,
+      questions: questions,
+    }
+
+    let raw = JSON.stringify({
+      "token": token,
+      "url": id.url,
+      "results": resultsWithForm,
+    })
+
+    let requestOptions = {
+      method: 'POST',
+      headers: headers,
+      body: raw,
+      redirect: 'follow'
+    }
+
+    fetch("http://localhost:4000/api/form/submit", requestOptions)
+    .then(response => response.json())
+    .then((result=>{
+        console.log(result);
+    })).catch((error)=>{
+        console.log(error);
+    })
+
   }
+
+ 
 
   return (
     <section className='bg-gray-200 min-h-screen'>
@@ -101,7 +147,7 @@ export default function ViewForm() {
               </div>
             </div>  
             {questions.map((question,index)=>{
-                return <Question key={index} remove={removeOption} id={index} handler={handler} question={question} />
+                return <Question key={index} id={index} handler={handler} question={question} />
             })}
 
             <div className="flex justify-between px-1">

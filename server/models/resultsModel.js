@@ -2,9 +2,8 @@ const mongoose = require('mongoose')
 const ResultsSchema = new mongoose.Schema({
     formUrl: {
         type: String,
-         max:20, min:4,
-         required:true
-        },
+        required:true
+    },
     user: {
         type:String, 
         required:true
