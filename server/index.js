@@ -9,9 +9,17 @@ app.use(express.json())
 app.use(cors())
 
 
+//Connecting to the MongoDB database
+mongoose.connect('mongodb://127.0.0.1:27017/forms').then(()=>{
+    console.log("connected to DB");
+}).catch((err)=>{
+    console.log("Error connecting to DB");
+})
 
-mongoose.connect('mongodb://127.0.0.1:27017/forms', ()=>console.log("db Connected"))
+//Routes
 app.use('/api/auth', AuthRoute)
 app.use('/api/form', formRouter)
+
+//Starting the server
 app.listen(port, ()=> console.log("Server up"))
 

@@ -1,8 +1,11 @@
+
+//I used the primary ways of node js in this project and i ain't gonna change 'em
+
 const jwt = require("jsonwebtoken");
 const { FormSchema } = require("../models/formsModel");
 const { v4: uuidv4 } = require("uuid");
 const { UsersSchema } = require("../models/userModel");
-const { model } = require("mongoose");
+const { model, default: mongoose } = require("mongoose");
 const { ResultsSchema } = require("../models/resultsModel");
 
 module.exports.CreateForm = async (req, res, next) => {
@@ -132,7 +135,7 @@ module.exports.getRecentForms = async (req, res, next) => {
 
     //Get all forms
 
-    const forms = await FormSchema.find({ owner: user._id }).limit(15);
+    const forms = await FormSchema.find({ owner: user._id }).limit(15).sort({_id: -1});
     return res.json({ status: true, forms: forms });
   } catch (e) {
     next(e);
@@ -215,3 +218,51 @@ module.exports.Submitresults = async (req, res, next) => {
     next(err);
   }
 };
+
+
+module.exports.getAnalytics = async(req,res,next)=>{
+  try {
+
+    /*
+
+      Analytics
+
+      -People who submitted 
+      -their responses
+      -If there are any multiple choices or checkboxes the I'll give percentages and numbers
+
+
+    */
+
+    //Verify is the request is from the owner of the form
+
+    const {token, form} = req.body
+
+    if(!token || !form) return res.status(402).json({msg: "bad request"})
+
+    //Vefify token
+
+    const decoded = jwt.verify(token, process.env.JWT_KEY)
+
+    if(!decoded) return res.status(403)
+
+    //Finde the user
+
+    const user = UsersSchema.findOne({email: decoded.email})
+    if(!user) return res.status(404)
+
+    // check if the form exists
+
+    const form_1 = FormSchema.findOne({owner: user._id})
+
+    if(!form_1) return res.status(404).json({msg: "form not found"})
+
+    //Find all results submitted to that form
+
+    const allResults = ResultsSchema.find({url: form_1.url})
+    
+    
+  } catch (err) {
+    next(err)
+  }
+}
