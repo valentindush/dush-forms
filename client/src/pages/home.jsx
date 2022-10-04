@@ -16,7 +16,7 @@ export default function Home() {
   const navigate = useNavigate()
   const [currentUser,setCurrentUser] = useState({})
   const [loading,setLoading] = useState(false)
-  const [recentForms,setRecentForms] = useState(null)
+  const [recentForms,setRecentForms] = useState([])
 
   const getRecentForms = () => {
     var myHeaders = new Headers();
@@ -137,7 +137,7 @@ export default function Home() {
             return <RecentCard key={index} img={eventIMG} name={form.form.title} id={form.url}/>
           })}
 
-          {!recentForms && <p className='text-gray-600 text-sm'>Your recent forms will appear here.</p>}
+          {recentForms.length === 0 && <p className='text-gray-600 text-sm'>Your recent forms will appear here.</p>}
 
         </div>
         <ToastContainer />

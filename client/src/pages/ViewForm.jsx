@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import Question from '../components/view/question'
 import { toast, ToastContainer } from 'react-toastify'
+import jwtDecode from 'jwt-decode'
 
 export default function ViewForm() {
 
@@ -13,12 +14,17 @@ export default function ViewForm() {
   const [title, setTitle] = useState('')
   const [questions, setQuestions] = useState([])
   const [loading, setLoading] = useState(false)
+
+  const [profile,setProfile] = useState({})
   
   useEffect(()=>{
     const token = JSON.parse(localStorage.getItem('forms_token'))
     if(!token){
       navigate('/login')
     }
+
+    const decoded = jwtDecode(token)
+    setProfile(decoded)
 
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
@@ -148,7 +154,7 @@ export default function ViewForm() {
           <div className="right flex items-center cursor-pointer relative">
               <div className="profile flex items-center gap-2">
                   <img className='object-cover w-8 h-8 rounded-full block' src="https://st2.depositphotos.com/1104517/11965/v/950/depositphotos_119659092-stock-illustration-male-avatar-profile-picture-vector.jpg" alt="" />
-                  <p className='text-sm text-white'>dush valentin</p>
+                  <p className='text-sm text-white'>{profile.username}</p>
               </div>
           </div>
         </div>
@@ -168,7 +174,7 @@ export default function ViewForm() {
 
             <div className="flex justify-between px-1">
               <button onClick={submit} className='bg-blue-400 p-2 px-8 font-medium rounded-lg text-white'>Submit</button>
-              <button className='bg-red-400 p-2 px-8 font-medium rounded-lg text-white'>Cancel</button>
+              <button onClick={()=>{navigate("/")}} className='bg-red-400 p-2 px-8 font-medium rounded-lg text-white'>Cancel</button>
             </div>
 
             <ToastContainer />

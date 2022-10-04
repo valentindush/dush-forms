@@ -24,7 +24,7 @@ export default function Create() {
   const [loading, setLoading] = useState(false);
   const [showShareDiv, setShowShareDiv] = useState(false);
   const [formUrl, setFormUrl] = useState("");
-
+  const [formType,setFormType] = useState("")
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +32,10 @@ export default function Create() {
     if (!token) {
       navigate("/login");
     }
+
+    const urlString = window.location.search
+    const urlParams = new URLSearchParams(urlString)
+    setFormType(urlParams.get('temp'))
   }, []);
 
   const handleQtypeChange = (e) => {
@@ -96,6 +100,7 @@ export default function Create() {
 
       const form = {
         title: formTitle,
+        type: formType,
         subtitle: formSubTitle,
         questions: [...questions],
       };
@@ -156,10 +161,10 @@ export default function Create() {
     }
     if ("clipboard" in navigator) {
       toast.success("Copied to clipboard", toastOptions);
-      return await navigator.clipboard.writeText(text); 
+      await navigator.clipboard.writeText(text); 
     } else {
       toast.success("Copied to clipboard", toastOptions);
-      return document.execCommand("copy", true, text);
+      document.execCommand("copy", true, text);
     }
   };
 
