@@ -258,9 +258,16 @@ module.exports.getAnalytics = async(req,res,next)=>{
     if(!form_1) return res.status(404).json({msg: "form not found"})
 
     //Find all results submitted to that form
+    const allResults = await ResultsSchema.find({url: form_1.url})
 
-    const allResults = ResultsSchema.find({url: form_1.url})
+    //ANALYSE THEM
+    //Find the checkboxes and mutiple choice qestions
     
+    // allResults.forEach(result=>{
+    //   if(result){
+
+    //   }
+    // })
     
   } catch (err) {
     next(err)
