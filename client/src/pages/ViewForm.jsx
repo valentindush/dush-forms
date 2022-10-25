@@ -17,6 +17,7 @@ export default function ViewForm() {
   const [loading, setLoading] = useState(false)
 
   const [profile,setProfile] = useState({})
+  const [isOwner,setIsOwner] = useState(false)
   
   useEffect(()=>{
     const token = JSON.parse(localStorage.getItem('forms_token'))
@@ -155,6 +156,74 @@ export default function ViewForm() {
       }
     ]
   }
+
+  const getform = ()=>{
+    const token = JSON.parse(localStorage.getItem('forms_token'))
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    if(!token) return
+    let raw = JSON.stringify({
+      "token": token,
+      "url": id.url,
+    })
+
+    let requestOptions = {
+      method: 'POST',
+      headers: headers,
+      body: raw,
+      redirect: 'follow'
+    }
+
+    fetch("http://localhost:4000/api/form/getform", requestOptions)
+    .then(response => response.json())
+    .then((result=>{
+      if(result.status && result.form[0].owner === jwtDecode(token).id){
+        setIsOwner(true)
+      }else{
+        setIsOwner(false)
+      }
+    }))
+    .catch((error)=>{
+        console.log(error);
+        setIsOwner(false)
+    })
+
+  }
+
+  useEffect(()=>{
+    getform()
+  },[])
+
+  const getResults = ()=>{
+
+  }
+
+  if(isOwner){
+    const token = JSON.parse(localStorage.getItem('forms_token'))
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    if(!token) return
+    let raw = JSON.stringify({
+      "token": token,
+      "url": id.url,
+    })
+
+    let requestOptions = {
+      method: 'POST',
+      headers: headers,
+      body: raw,
+      redirect: 'follow'
+    }
+
+    fetch("http://localhost:4000/api/form/getresults", requestOptions)
+    .then((response)=>response.json())
+    .then((result)=>{
+      console.log(result)
+    }).catch((error)=>{
+
+    })
+  }
+
   return (
     <section className='bg-gray-200 min-h-screen relative'>
         <div className='p-4 w-full bg-blue-500 flex items-center justify-between sticky z-10 top-0 bg-opacity-70 backdrop-blur-md'>
@@ -198,7 +267,7 @@ export default function ViewForm() {
               <ToastContainer />
 
         </div>
-        <div className="w-[40%] h-full bg-white mt-16 mr-4 p-5 rounded-lg">
+        {isOwner&&<div className="w-[40%] h-full bg-white mt-16 mr-4 p-5 rounded-lg">
             <div className="">
               <h2 className='font-semibold text-gray-800 opacity-90'>Submits</h2>
 
@@ -210,14 +279,14 @@ export default function ViewForm() {
                 <Result res={result} />
               </div>
             </div>
-        </div>
+        </div>}
        </div>
-        <div className="fixed top-24 right-24">
+        {isOwner&&<div className="fixed top-24 right-24">
           <div className="flex gap-4">
             <button className='p-2 px-4 bg-blue-400 text-white text-sm rounded-lg flex items-center justify-center gap-2'><svg className='w-5 h-5 fill-white' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M500 89c13.8-11 16-31.2 5-45s-31.2-16-45-5L319.4 151.5 211.2 70.4c-11.7-8.8-27.8-8.5-39.2 .6L12 199c-13.8 11-16 31.2-5 45s31.2 16 45 5L192.6 136.5l108.2 81.1c11.7 8.8 27.8 8.5 39.2-.6L500 89zM160 256V448c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-17.7-14.3-32-32-32s-32 14.3-32 32zM32 352v96c0 17.7 14.3 32 32 32s32-14.3 32-32V352c0-17.7-14.3-32-32-32s-32 14.3-32 32zm288-64c-17.7 0-32 14.3-32 32V448c0 17.7 14.3 32 32 32s32-14.3 32-32V320c0-17.7-14.3-32-32-32zm96-32V448c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-17.7-14.3-32-32-32s-32 14.3-32 32z"/></svg>Analytics</button>
             <button className='p-2 px-4 bg-blue-400 text-white text-sm rounded-lg  flex items-center justify-center gap-2'><svg className='w-5 h-5 fill-white' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>Submits</button>
           </div>
-        </div>
+        </div>}
         
         {loading && (
           <div className="flex flex-col gap-2 items-center absolute left-[47%] top-1/2">
