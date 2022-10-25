@@ -134,7 +134,7 @@ export default function Home() {
         <div className="flex flex-wrap gap-3 pt-5">
 
           {recentForms&&recentForms.map((form,index)=>{
-            return <RecentCard key={index} img={eventIMG} name={form.form.title} id={form.url}/>
+            return <RecentCard key={index} img={jobImg} name={form.form.title} id={form.url}/>
           })}
 
           {recentForms.length === 0 && <p className='text-gray-600 text-sm'>Your recent forms will appear here.</p>}

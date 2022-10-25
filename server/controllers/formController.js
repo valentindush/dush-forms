@@ -262,12 +262,7 @@ module.exports.getAnalytics = async(req,res,next)=>{
 
     //ANALYSE THEM
     //Find the checkboxes and mutiple choice qestions
-    
-    // allResults.forEach(result=>{
-    //   if(result){
 
-    //   }
-    // })
     
   } catch (err) {
     next(err)

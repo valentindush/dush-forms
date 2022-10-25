@@ -1,0 +1,11 @@
+@keyframes animate {
+    from{
+        height: 100%;
+    }to{
+        height: fit-content;
+    }
+}
+
+.anime{
+    animation: animate 1s;
+}

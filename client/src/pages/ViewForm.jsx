@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import Question from '../components/view/question'
 import { toast, ToastContainer } from 'react-toastify'
 import jwtDecode from 'jwt-decode'
+import { Result } from '../components/view/result'
 
 export default function ViewForm() {
 
@@ -140,6 +141,20 @@ export default function ViewForm() {
 
   }
 
+  const result ={
+    username: 'John Doe',
+    email:"johndoe@gmail.com",
+    answers: [
+      {
+        question: 'What is your name?',
+        answer: 'John Doe'
+      },
+      {
+        question: 'What is your age?',
+        answer: '20'
+      }
+    ]
+  }
   return (
     <section className='bg-gray-200 min-h-screen relative'>
         <div className='p-4 w-full bg-blue-500 flex items-center justify-between sticky z-10 top-0 bg-opacity-70 backdrop-blur-md'>
@@ -159,27 +174,51 @@ export default function ViewForm() {
           </div>
         </div>
 
-        <div className={`form sm:w-[90%] md:w-[600px] lg:w-[600px] m-auto mt-5  h-fit flex flex-col gap-2 pb-5 }`}>
-            <div className="header p-4 bg-white rounded-lg">
-              <div className="title">
-                <h2 className='text-xl text-gray-700 py-4 font-semibold'>{title}</h2>
-              </div>
-              <div className="desc">
-                <h3 className='txt-sm text-gray-500'>{form.subtitle}</h3>
-              </div>
-            </div>  
-            {questions.map((question,index)=>{
-                return <Question key={index} id={index} handler={handler} question={question} />
-            })}
+        
 
-            <div className="flex justify-between px-1">
-              <button onClick={submit} className='bg-blue-400 p-2 px-8 font-medium rounded-lg text-white'>Submit</button>
-              <button onClick={()=>{navigate("/")}} className='bg-red-400 p-2 px-8 font-medium rounded-lg text-white'>Cancel</button>
-            </div>
+       <div className="flex w-full gap-3">
+        <div className={`form w-[40%] m-auto mt-5  h-fit flex flex-col gap-2 pb-5 }`}>
+              <div className="header p-4 bg-white rounded-lg">
+                <div className="title">
+                  <h2 className='text-xl text-gray-700 py-4 font-semibold'>{title}</h2>
+                </div>
+                <div className="desc">
+                  <h3 className='txt-sm text-gray-500'>{form.subtitle}</h3>
+                </div>
+              </div>  
+              {questions.map((question,index)=>{
+                  return <Question key={index} id={index} handler={handler} question={question} />
+              })}
 
-            <ToastContainer />
+              <div className="flex justify-between px-1">
+                <button onClick={submit} className='bg-blue-400 p-2 px-8 font-medium rounded-lg text-white'>Submit</button>
+                <button onClick={()=>{navigate("/")}} className='bg-red-400 p-2 px-8 font-medium rounded-lg text-white'>Cancel</button>
+              </div>
+
+              <ToastContainer />
 
         </div>
+        <div className="w-[40%] h-full bg-white mt-16 mr-4 p-5 rounded-lg">
+            <div className="">
+              <h2 className='font-semibold text-gray-800 opacity-90'>Submits</h2>
+
+              <div className="flex flex-col gap-2 pt-4">
+                <Result res={result} />
+                <Result res={result} />
+                <Result res={result} />
+                <Result res={result} />
+                <Result res={result} />
+              </div>
+            </div>
+        </div>
+       </div>
+        <div className="fixed top-24 right-24">
+          <div className="flex gap-4">
+            <button className='p-2 px-4 bg-blue-400 text-white text-sm rounded-lg flex items-center justify-center gap-2'><svg className='w-5 h-5 fill-white' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M500 89c13.8-11 16-31.2 5-45s-31.2-16-45-5L319.4 151.5 211.2 70.4c-11.7-8.8-27.8-8.5-39.2 .6L12 199c-13.8 11-16 31.2-5 45s31.2 16 45 5L192.6 136.5l108.2 81.1c11.7 8.8 27.8 8.5 39.2-.6L500 89zM160 256V448c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-17.7-14.3-32-32-32s-32 14.3-32 32zM32 352v96c0 17.7 14.3 32 32 32s32-14.3 32-32V352c0-17.7-14.3-32-32-32s-32 14.3-32 32zm288-64c-17.7 0-32 14.3-32 32V448c0 17.7 14.3 32 32 32s32-14.3 32-32V320c0-17.7-14.3-32-32-32zm96-32V448c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-17.7-14.3-32-32-32s-32 14.3-32 32z"/></svg>Analytics</button>
+            <button className='p-2 px-4 bg-blue-400 text-white text-sm rounded-lg  flex items-center justify-center gap-2'><svg className='w-5 h-5 fill-white' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>Submits</button>
+          </div>
+        </div>
+        
         {loading && (
           <div className="flex flex-col gap-2 items-center absolute left-[47%] top-1/2">
             <svg
