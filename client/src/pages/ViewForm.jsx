@@ -18,6 +18,7 @@ export default function ViewForm() {
 
   const [profile,setProfile] = useState({})
   const [isOwner,setIsOwner] = useState(false)
+  const [results,setResults] = useState([])
   
   useEffect(()=>{
     const token = JSON.parse(localStorage.getItem('forms_token'))
@@ -156,7 +157,31 @@ export default function ViewForm() {
       }
     ]
   }
+  const getResults = ()=>{
+    console.log("Running function");
+    const token = JSON.parse(localStorage.getItem('forms_token'))
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json")
+    headers.append("Authorization","Bearer "+token)
+    if(!token) return
 
+    let requestOptions = {
+      method: 'GET',
+      headers: headers,
+      redirect: 'follow'
+    }
+
+    fetch("http://localhost:4000/api/results/getresults/"+id.url, requestOptions)
+    .then((response)=>response.json())
+    .then((result)=>{
+      if(result.status){
+        setResults(result.results)
+        console.log(results)
+      }
+    }).catch((error)=>{
+      console.log(error)
+    })
+  }
   const getform = ()=>{
     const token = JSON.parse(localStorage.getItem('forms_token'))
     let headers = new Headers();
@@ -192,37 +217,11 @@ export default function ViewForm() {
 
   useEffect(()=>{
     getform()
+    getResults()
   },[])
 
-  const getResults = ()=>{
 
-  }
 
-  if(isOwner){
-    const token = JSON.parse(localStorage.getItem('forms_token'))
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    if(!token) return
-    let raw = JSON.stringify({
-      "token": token,
-      "url": id.url,
-    })
-
-    let requestOptions = {
-      method: 'POST',
-      headers: headers,
-      body: raw,
-      redirect: 'follow'
-    }
-
-    fetch("http://localhost:4000/api/form/getresults", requestOptions)
-    .then((response)=>response.json())
-    .then((result)=>{
-      console.log(result)
-    }).catch((error)=>{
-
-    })
-  }
 
   return (
     <section className='bg-gray-200 min-h-screen relative'>
@@ -272,11 +271,9 @@ export default function ViewForm() {
               <h2 className='font-semibold text-gray-800 opacity-90'>Submits</h2>
 
               <div className="flex flex-col gap-2 pt-4">
-                <Result res={result} />
-                <Result res={result} />
-                <Result res={result} />
-                <Result res={result} />
-                <Result res={result} />
+                {results.map((res,indec)=>{
+                 return <Result id={res.user} res={res.results} />
+                })}
               </div>
             </div>
         </div>}

@@ -128,3 +128,17 @@ module.exports.verifyAccount = async (req,res,next)=>{
     }
 }
 
+module.exports.getUserInfo = (req,res,next)=>{
+    try {
+        const token = req.headers['authorization'].split(' ')[1]
+        let decoded = jwt.verify(token, process.env.JWT_KEY)
+        if(!decoded) return res.status(402)
+        const user = UsersSchema.findById(req.params.id)
+
+        return res.status({status:true, user})
+       
+    } catch (err) {
+        next(err)
+    }
+}
+
