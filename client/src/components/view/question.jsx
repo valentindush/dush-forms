@@ -42,13 +42,14 @@ export default function Question(props) {
         <div className='p-4 bg-white rounded-lg'>
             <div className="name">
                 <h2 className='py-3'>{question.name}</h2>
-                {question.type === 'text'&&<TextField value={text} onChange={(e)=>updateText(e)} className='w-full z-0 bg-white mt-3' color="primary" variant='filled' size='small'label="Add yout response" />}
+                {question.type === 'text'&&<TextField value={text} onChange={(e)=>props.handler(props.id,e.target.value)} className='w-full z-0 bg-white mt-3' color="primary" variant='filled' size='small'label="Add yout response" />}
             </div>
             {question.options.length > 0 && 
             <div className="options pt-3">
                 <div className="px-2">
                 
-                {question.type === 'radio'?<RadioGroup onChange={(e)=>updateOption(e)}>
+                {question.type === 'radio'?
+                <RadioGroup onChange={(e)=>updateOption(e)}>
                     {options}
                 </RadioGroup> : 
                     <FormGroup>
