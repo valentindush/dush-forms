@@ -19,6 +19,8 @@ export default function ViewForm() {
   const [profile,setProfile] = useState({})
   const [isOwner,setIsOwner] = useState(false)
   const [results,setResults] = useState([])
+
+  const [formSubmitted, setFormSubmitted] = useState(false)
   
   useEffect(()=>{
     const token = JSON.parse(localStorage.getItem('forms_token'))
@@ -92,6 +94,7 @@ export default function ViewForm() {
       }
       setLoading(false)
       toast.error('Please answer all required questions', toastOptions)
+      return
     }
     //Submit form
 
@@ -133,6 +136,7 @@ export default function ViewForm() {
         setLoading(false)
         if(result.status){
           toast.success('Form submitted', toastOptions)
+          setFormSubmitted(true)
         }else{
           toast.error(result.msg, toastOptions)
         }
@@ -143,20 +147,6 @@ export default function ViewForm() {
 
   }
 
-  const result ={
-    username: 'John Doe',
-    email:"johndoe@gmail.com",
-    answers: [
-      {
-        question: 'What is your name?',
-        answer: 'John Doe'
-      },
-      {
-        question: 'What is your age?',
-        answer: '20'
-      }
-    ]
-  }
   const getResults = ()=>{
     console.log("Running function");
     const token = JSON.parse(localStorage.getItem('forms_token'))
@@ -245,6 +235,10 @@ export default function ViewForm() {
         
 
        <div className="flex w-full gap-3">
+        {formSubmitted?
+        <div className='p-4 bg-white'>
+          <p>Form submitted</p>
+        </div>:
         <div className={`form w-[40%] m-auto mt-5  h-fit flex flex-col gap-2 pb-5 }`}>
               <div className="header p-4 bg-white rounded-lg">
                 <div className="title">
@@ -265,15 +259,21 @@ export default function ViewForm() {
 
               <ToastContainer />
 
-        </div>
+        </div>}
         {isOwner&&<div className="w-[40%] h-full bg-white mt-16 mr-4 p-5 rounded-lg">
             <div className="">
               <h2 className='font-semibold text-gray-800 opacity-90'>Submits</h2>
 
               <div className="flex flex-col gap-2 pt-4">
                 {results.map((res,indec)=>{
-                 return <Result id={res.user} res={res.results} />
+                  
+                 return(
+                 <>
+                  <Result key={indec} id={res.user} res={res.results} />
+                 </>) 
+                 
                 })}
+                {results.length == 0 && <p>No submits yet</p>}
               </div>
             </div>
         </div>}

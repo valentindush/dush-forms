@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 const { SendVerificationCode } = require("../utils");
 require('dotenv').config()
+const uuid = require('uuid')
 
 
 module.exports.register = async (req,res,next)=>{
@@ -43,7 +44,7 @@ module.exports.register = async (req,res,next)=>{
 
             console.log("done")
             
-            return res.json({token: accessToken, status: true})
+            return res.json({token: accessToken,refreshToken:uuid.v4(), status: true})
 
         }else{
             return res.status(500).json({message: "db error", status: false})
@@ -142,3 +143,12 @@ module.exports.getUserInfo = (req,res,next)=>{
     }
 }
 
+module.exports.refreshToken = async(req,res,next)=>{
+    try {
+
+
+        
+    } catch (err) {
+        next(err)
+    }
+}

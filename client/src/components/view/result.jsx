@@ -22,7 +22,7 @@ export const Result = (props) => {
         fetch('http://localhost:4000/api/results/getuserinfo/'+id,requestOptions)
         .then(res=>res.json())
         .then((res)=>{
-            console.log("");
+            console.log("User info");
             console.log(res)
         }).catch((err)=>{
             console.log(err)
