@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import bg from '../assets/bg.png'
-import { registerRoute } from '../utils/apiRoutes';
+import { host, registerRoute } from '../utils/apiRoutes';
 import axios from 'axios'
 import logo from '../logo1.png'
 import {Link, useNavigate} from 'react-router-dom'
@@ -62,7 +62,7 @@ export default function SignUp() {
             body: raw,
             redirect: 'follow'
             };
-            fetch("http://localhost:4000/api/auth/signup", requestOptions)
+            fetch(`${host}/api/auth/signup`, requestOptions)
             .then(response => response.json())
             .then((result)=>{
                 setLoading(false)

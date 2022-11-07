@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import bg from '../assets/bg.png'
 import logo from '../logo1.png'
+import {host} from '../utils/apiRoutes'
 
 export default function Login() {
 
@@ -51,7 +52,7 @@ export default function Login() {
         redirect: 'follow'
         };
 
-        fetch("http://localhost:4000/api/auth/login", requestOptions)
+        fetch(`${host}/api/auth/login`, requestOptions)
         .then(response => response.json())
         .then((result=>{
             setLoading(false)

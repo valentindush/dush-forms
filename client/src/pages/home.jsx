@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import jwt_decode from 'jwt-decode'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { host } from '../utils/apiRoutes'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -34,7 +35,7 @@ export default function Home() {
       redirect: 'follow'
       };
   
-      fetch("http://localhost:4000/api/form/getrecentforms", requestOptions)
+      fetch(`${host}/api/form/getrecentforms`, requestOptions)
       .then(response => response.json())
       .then((result=>{
           setLoading(false)
@@ -70,7 +71,7 @@ export default function Home() {
       redirect: 'follow'
       };
 
-      fetch("http://localhost:4000/api/auth/loginhome", requestOptions)
+      fetch(`${host}/api/auth/loginhome`, requestOptions)
       .then(response => response.json())
       .then((result=>{
 

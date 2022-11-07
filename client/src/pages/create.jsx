@@ -5,6 +5,7 @@ import Question from "./question";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import {host} from '../utils/apiRoutes'
 
 export default function Create() {
   const [showTxt, setShowTxt] = useState(false);
@@ -125,7 +126,7 @@ export default function Create() {
         redirect: "follow",
       };
 
-      fetch("http://localhost:4000/api/form/create", requestOptions)
+      fetch(`${host}/api/form/create`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
           setLoading(false);

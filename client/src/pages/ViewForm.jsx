@@ -6,7 +6,7 @@ import Question from '../components/view/question'
 import { toast, ToastContainer } from 'react-toastify'
 import jwtDecode from 'jwt-decode'
 import { Result } from '../components/view/result'
-
+import {host} from '../utils/apiRoutes'
 export default function ViewForm() {
 
   const id  = useParams()
@@ -45,7 +45,7 @@ export default function ViewForm() {
       redirect: 'follow'
       };
 
-      fetch("http://localhost:4000/api/form/getform", requestOptions)
+      fetch(`${host}/api/form/getform`, requestOptions)
       .then(response => response.json())
       .then((result=>{
           if(result.status){ 

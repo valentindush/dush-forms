@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
-
+import {host} from '../../utils/apiRoutes'
 export default function RecentCard(props) {
 
   const [view,setView] = useState(false)
@@ -30,7 +30,7 @@ export default function RecentCard(props) {
       body: raw,
     };
 
-    fetch("http://localhost:4000/api/form/delete",requestOptions)
+    fetch(`${host}/api/form/delete`,requestOptions)
     .then(res => res.json())
     .then((res)=>{
 
