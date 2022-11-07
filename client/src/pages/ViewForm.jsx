@@ -269,7 +269,7 @@ export default function ViewForm() {
                   
                  return(
                  <>
-                  <Result key={indec} id={res.user} res={res.results} />
+                  <Result n={indec} key={indec} id={res.user} res={res.results} />
                  </>) 
                  
                 })}
