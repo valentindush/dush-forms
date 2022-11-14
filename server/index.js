@@ -11,7 +11,7 @@ app.use(cors())
 
 
 //Connecting to the MongoDB database
-mongoose.connect('mongodb://127.0.0.1:27017/forms').then(()=>{
+mongoose.connect('mongodb+srv://admin:tFdYX7WXUF1rI74A@cluster0.swofe.mongodb.net/forms').then(()=>{
     console.log("connected to DB");
 }).catch((err)=>{
     console.log("Error connecting to DB");
