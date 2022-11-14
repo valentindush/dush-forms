@@ -284,7 +284,7 @@ export default function Create() {
               onClick={(e) => copyUrl(e.target.innerText)}
               className="text-xs text-blue-400 text-center cursor-pointer"
             >
-              http://localhost:3000/form/{formUrl ? formUrl : ""}
+              http://www.dush-forms.vercel.app/form/{formUrl ? formUrl : ""}
             </p>
           </div>
           <div className="">
