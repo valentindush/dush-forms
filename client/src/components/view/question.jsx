@@ -25,11 +25,10 @@ export default function Question(props) {
 
   const [checkboxes, setCheckboxes] = useState([]);
   const updateCheckBox = (e) => {
-    console.log(e.target.checked)
     if (e.target.checked) {
       props.handler(props.id, [...checkboxes, e.target.value])
     } else {
-      setCheckboxes(checkboxes.filter((item) => item !== e.target.value));
+      setCheckboxes(checkboxes=>checkboxes.filter((item) => item !== e.target.value));
       props.handler(checkboxes.filter((item)=> item !== e.target.value))
     }
     props.handler(props.id, checkboxes);
