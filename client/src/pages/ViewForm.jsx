@@ -161,7 +161,7 @@ export default function ViewForm() {
       redirect: 'follow'
     }
 
-    fetch(`${host}/`+id.url, requestOptions)
+    fetch(`${host}/api/results/getresults/`+id.url, requestOptions)
     .then((response)=>response.json())
     .then((result)=>{
       if(result.status){
