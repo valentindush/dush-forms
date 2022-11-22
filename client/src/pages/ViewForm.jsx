@@ -130,7 +130,7 @@ export default function ViewForm() {
       draggable: true,
     }
 
-    fetch("http://localhost:4000/api/form/submit", requestOptions)
+    fetch(`${host}/api/form/submit`, requestOptions)
     .then(response => response.json())
     .then((result=>{
         setLoading(false)
@@ -161,7 +161,7 @@ export default function ViewForm() {
       redirect: 'follow'
     }
 
-    fetch("http://localhost:4000/api/results/getresults/"+id.url, requestOptions)
+    fetch(`${host}/api/results/getresults/`+id.url, requestOptions)
     .then((response)=>response.json())
     .then((result)=>{
       if(result.status){
@@ -189,7 +189,7 @@ export default function ViewForm() {
       redirect: 'follow'
     }
 
-    fetch("http://localhost:4000/api/form/getform", requestOptions)
+    fetch(`${host}/api/form/getform`, requestOptions)
     .then(response => response.json())
     .then((result=>{
       if(result.status && result.form[0].owner === jwtDecode(token).id){
