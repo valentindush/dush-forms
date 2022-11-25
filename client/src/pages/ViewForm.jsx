@@ -24,9 +24,6 @@ export default function ViewForm() {
   
   useEffect(()=>{
     const token = JSON.parse(localStorage.getItem('forms_token'))
-    if(!token){
-      navigate('/login')
-    }
 
     const decoded = jwtDecode(token)
     setProfile(decoded)
