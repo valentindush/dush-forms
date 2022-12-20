@@ -29,10 +29,6 @@ export default function Create() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("forms_token"));
-    if (!token) {
-      navigate("/login");
-    }
 
     const urlString = window.location.search
     const urlParams = new URLSearchParams(urlString)

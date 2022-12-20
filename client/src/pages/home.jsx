@@ -52,11 +52,6 @@ export default function Home() {
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem('forms_token'));
-    if (!token) {
-      localStorage.removeItem('forms_token')
-      navigate('/login')
-    }else{
-      
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 
@@ -88,7 +83,7 @@ export default function Home() {
           localStorage.removeItem('forms_token')
           navigate('/login')
       });
-    }
+    
     getRecentForms()
   },[])
 
