@@ -12,8 +12,12 @@ import { useNavigate } from "react-router-dom";
 
 function App() {
   const [token, setToken] = useState(null);
+  const navigate = useNavigate()
   useEffect(() => {
     setToken(localStorage.getItem("forms_token"));
+    if(!localStorage.getItem("forms_token")){
+      navigate('/login')
+    }
   }, []);
 
   return (
