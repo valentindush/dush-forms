@@ -11,13 +11,10 @@ import ViewForm from "./pages/ViewForm";
 import { useNavigate } from "react-router-dom";
 
 function App() {
-  const [token, setToken] = useState(null);
-  const navigate = useNavigate()
+  const [token, setToken] = useState("");
   useEffect(() => {
     setToken(localStorage.getItem("forms_token"));
-    if(!localStorage.getItem("forms_token")){
-      navigate('/login')
-    }
+
   }, []);
 
   return (
