@@ -20,10 +20,27 @@ export default function ViewForm() {
   const [isOwner,setIsOwner] = useState(false)
   const [results,setResults] = useState([])
 
+  const [active, setActive] = useState(false)
+  const [width, setWidth] = useState(window.innerWidth)
+
+  window.addEventListener('resize',(e)=>{
+      setWidth(window.innerWidth)
+  })
+
+  useEffect(()=>{
+    if(width > 800){
+        setActive(false)
+    }
+  },[width])
+
   const [formSubmitted, setFormSubmitted] = useState(false)
   
   useEffect(()=>{
     const token = JSON.parse(localStorage.getItem('forms_token'))
+
+    if(!token){
+      navigate('/login')
+    }
 
     const decoded = jwtDecode(token)
     setProfile(decoded)
@@ -236,7 +253,7 @@ export default function ViewForm() {
         <div className='p-4 bg-white'>
           <p>Form submitted</p>
         </div>:
-        <div className={`form w-[40%] m-auto mt-5  h-fit flex flex-col gap-2 pb-5 }`}>
+        <div className={`form w-[40%] min-w-[400px] md:w-full md:flex-wrap m-auto mt-5  h-fit flex flex-col gap-2 pb-5 }`}>
               <div className="header p-4 bg-white rounded-lg">
                 <div className="title">
                   <h2 className='text-xl text-gray-700 py-4 font-semibold'>{title}</h2>
@@ -257,9 +274,12 @@ export default function ViewForm() {
               <ToastContainer />
 
         </div>}
-        {isOwner&&<div className="w-[40%] h-full bg-white mt-16 mr-4 p-5 rounded-lg">
+        {isOwner&&
+        <div className="w-[40%] min-w-[400px] md:absolute md:w-full md:top-12 h-full bg-white mt-16 mr-4 p-5 rounded-lg">
             <div className="">
               <h2 className='font-semibold text-gray-800 opacity-90'>Submits</h2>
+
+              <button onChange={()=>setActive(!active)} className='bg-red-500 text-white text-sm p-2 hidden md:block rounded-lg absolute top-3 right-5'>Close</button>
 
               <div className="flex flex-col gap-2 pt-4">
                 {results.map((res,indec)=>{
@@ -273,14 +293,15 @@ export default function ViewForm() {
                 {results.length == 0 && <p>No submits yet</p>}
               </div>
             </div>
-        </div>}
+        </div>
+        }
        </div>
-        {isOwner&&<div className="fixed top-24 right-24">
+        {/* {isOwner&&<div className="fixed top-24 right-12">
           <div className="flex gap-4">
             <button className='p-2 px-4 bg-blue-400 text-white text-sm rounded-lg flex items-center justify-center gap-2'><svg className='w-5 h-5 fill-white' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M500 89c13.8-11 16-31.2 5-45s-31.2-16-45-5L319.4 151.5 211.2 70.4c-11.7-8.8-27.8-8.5-39.2 .6L12 199c-13.8 11-16 31.2-5 45s31.2 16 45 5L192.6 136.5l108.2 81.1c11.7 8.8 27.8 8.5 39.2-.6L500 89zM160 256V448c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-17.7-14.3-32-32-32s-32 14.3-32 32zM32 352v96c0 17.7 14.3 32 32 32s32-14.3 32-32V352c0-17.7-14.3-32-32-32s-32 14.3-32 32zm288-64c-17.7 0-32 14.3-32 32V448c0 17.7 14.3 32 32 32s32-14.3 32-32V320c0-17.7-14.3-32-32-32zm96-32V448c0 17.7 14.3 32 32 32s32-14.3 32-32V256c0-17.7-14.3-32-32-32s-32 14.3-32 32z"/></svg>Analytics</button>
             <button className='p-2 px-4 bg-blue-400 text-white text-sm rounded-lg  flex items-center justify-center gap-2'><svg className='w-5 h-5 fill-white' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>Submits</button>
           </div>
-        </div>}
+        </div>} */}
         
         {loading && (
           <div className="flex flex-col gap-2 items-center absolute left-[47%] top-1/2">

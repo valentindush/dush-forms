@@ -8,27 +8,17 @@ import SignUp from "./pages/signup";
 import Home from "./pages/home";
 import Create from "./pages/create";
 import ViewForm from "./pages/ViewForm";
-import { useNavigate } from "react-router-dom";
 
 function App() {
-  const [token, setToken] = useState("");
-  useEffect(() => {
-    setToken(localStorage.getItem("forms_token"));
-
-  }, []);
-
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route exact path="/signup" element={<SignUp />} />
-        {token && (
-          <>
-            <Route path="/" element={<Home />} />
-            <Route path="/create" element={<Create />} />
-            <Route path="/form/:url" element={<ViewForm />} />
-          </>
-        )}
+
+        <Route path="/" element={<Home />} />
+        <Route path="/create" element={<Create />} />
+        <Route path="/form/:url" element={<ViewForm />} />
       </Routes>
     </Router>
   );

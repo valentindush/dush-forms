@@ -52,9 +52,11 @@ export default function Home() {
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem('forms_token'));
+
     if(!token){
       navigate('/login')
     }
+
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 

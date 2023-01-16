@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import {host} from '../utils/apiRoutes'
 
 export default function Create() {
-  const [showTxt, setShowTxt] = useState(false);
   const [questionType, setQuestionType] = useState("text");
   const [showForm, setShowForm] = useState(false);
   const [qestionName, setQestionName] = useState("");
@@ -29,6 +28,12 @@ export default function Create() {
   const navigate = useNavigate();
 
   useEffect(() => {
+
+    const token = JSON.parse(localStorage.getItem("forms_token"));
+
+    if(!token){
+      navigate('/login')
+    }
 
     const urlString = window.location.search
     const urlParams = new URLSearchParams(urlString)
